@@ -15,8 +15,6 @@ body{
     overflow-x:hidden;
     text-align:center;
 }
-
-/* WELCOME SCREEN */
 #welcomeScreen{
     position:fixed;
     top:0;
@@ -30,499 +28,122 @@ body{
     align-items:center;
     z-index:9999;
 }
+.welcomeText{font-size:35px;font-weight:bold;animation:zoomText 2s infinite;}
+.powered{margin-top:20px;font-size:18px;font-weight:bold;}
+@keyframes zoomText{0%{transform:scale(1);opacity:0.5;}50%{transform:scale(1.2);opacity:1;}100%{transform:scale(1);opacity:0.5;}}
 
-.welcomeText{
-    font-size:35px;
-    font-weight:bold;
-    animation:zoomText 3s infinite;
-}
+.page{display:none;min-height:100vh;padding-top:40px;}
+.page.active{display:block;}
 
-.powered{
-    margin-top:20px;
-    font-size:18px;
-    font-weight:bold;
-}
-
-@keyframes zoomText{
-    0%{transform:scale(1);opacity:0.5;}
-    50%{transform:scale(1.2);opacity:1;}
-    100%{transform:scale(1);opacity:0.5;}
-}
-
-/* PAGES */
-.page{
-    display:none;
-    min-height:100vh;
-    padding-top:40px;
-    padding-bottom:100px;
-}
-
-.page.active{
-    display:block;
-}
-
-/* INPUTS */
 input, select{
-    width:80%;
-    padding:15px;
-    margin:10px auto;
-    display:block;
-    border:none;
-    border-radius:40px;
-    background:red;
-    color:white;
-    outline:none;
-    font-size:16px;
-    box-sizing:border-box;
+    width:80%;padding:15px;margin:10px auto;display:block;border:none;border-radius:40px;
+    background:red;color:white;outline:none;font-size:16px;box-sizing:border-box;
 }
+input::placeholder{color:white;opacity:0.8;}
 
-input::placeholder{
-    color:white;
-    opacity:0.8;
-}
-
-/* PASSWORD TOGGLE - FIXED */
-.passwordWrap{
-    position:relative;
-    width:80%;
-    margin:10px auto;
-}
-
-.passwordWrap input{
-    width:100%;
-    margin:0;
-    padding-right:50px;
-}
-
+.passwordWrap{position:relative;width:80%;margin:10px auto;}
+.passwordWrap input{width:100%;margin:0;padding-right:50px;}
 .togglePass{
-    position:absolute;
-    right:8px;
-    top:50%;
-    transform:translateY(-50%);
-    background:white;
-    color:red;
-    border:none;
-    border-radius:50%;
-    width:32px;
-    height:32px;
-    font-size:14px;
-    cursor:pointer;
-    font-weight:bold;
-    padding:0;
-    margin:0;
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    background:white;color:red;border:none;border-radius:50%;width:32px;height:32px;
+    font-size:14px;cursor:pointer;font-weight:bold;padding:0;margin:0;
 }
 
-/* SEARCH BAR */
-#searchBar{
-    width:85%;
-    padding:12px;
-    margin:10px auto;
-    background:#ffe6e6;
-    color:red;
-    border:2px solid red;
-}
+#searchBar{width:85%;padding:12px;margin:10px auto;background:#ffe6e6;color:red;border:2px solid red;}
+#searchBar::placeholder{color:red;opacity:0.6;}
 
-#searchBar::placeholder{
-    color:red;
-    opacity:0.6;
+#marketItems, #myActiveItems, #myDeliveries{
+    display:flex;overflow-x:auto;gap:15px;padding:20px;white-space:nowrap;
 }
-
-/* MARKET AREA */
-#marketItems, #myActiveItems, #myDeliveries, #basketItems{
-    display:flex;
-    overflow-x:auto;
-    gap:15px;
-    padding:20px;
-    white-space:nowrap;
-}
-
-/* ITEM BOX */
 .marketItem{
-    min-width:3.5cm;
-    width:3.5cm;
-    height:auto;
-    padding:10px;
-    background:red;
-    color:white;
-    border-radius:20px;
-    flex-shrink:0;
-    font-size:11px;
+    min-width:3.5cm;width:3.5cm;height:auto;padding:10px;background:red;color:white;border-radius:20px;
+    flex-shrink:0;font-size:11px;
 }
-
-.deliveryItem,.basketItem{
-    min-width:4.5cm;
-    width:4.5cm;
-    height:auto;
-    padding:10px;
-    background:red;
-    color:white;
-    border-radius:20px;
-    flex-shrink:0;
-    font-size:10px;
+.deliveryItem{
+    min-width:4.5cm;width:4.5cm;height:auto;padding:10px;background:red;color:white;border-radius:20px;
+    flex-shrink:0;font-size:10px;
 }
-
-.itemImages{
-    display:flex;
-    overflow-x:auto;
-    gap:5px;
-    margin-bottom:5px;
-}
-
+.itemImages{display:flex;overflow-x:auto;gap:5px;margin-bottom:5px;}
 .itemImages img,.itemImages video{
-    width:2cm;
-    height:2cm;
-    object-fit:cover;
-    border-radius:10px;
-    cursor:pointer;
-    flex-shrink:0;
+    width:2cm;height:2cm;object-fit:cover;border-radius:10px;cursor:pointer;flex-shrink:0;
 }
 
-/* BASKET ICON */
-.basketIcon{
-    position:fixed;
-    top:15px;
-    right:15px;
-    width:65px;
-    height:65px;
-    border-radius:50%;
-    background:red;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:28px;
-    font-weight:bold;
-    cursor:pointer;
-    box-shadow:0 0 15px rgba(255,0,0,0.6);
-    animation:basketPulse 2s infinite;
-    z-index:1000;
+.transportBox{
+    width:80%;margin:15px auto;padding:15px;background:#ffe6e6;border:2px solid red;border-radius:40px;
+    color:red;font-weight:bold;cursor:pointer;
 }
-
-@keyframes basketPulse{
-    0%{transform:scale(1);box-shadow:0 0 15px rgba(255,0,0,0.6);}
-    50%{transform:scale(1.1);box-shadow:0 0 25px rgba(255,0,0,0.9);}
-    100%{transform:scale(1);box-shadow:0 0 15px rgba(255,0,0,0.6);}
+.transportOptions{display:none;width:80%;margin:5px auto;}
+.transportBtn{
+    width:100%;padding:12px;margin:5px 0;background:red;color:white;border:none;border-radius:30px;
+    font-size:14px;font-weight:bold;cursor:pointer;
 }
-
-.basketCount{
-    position:absolute;
-    top:-5px;
-    right:-5px;
-    background:white;
-    color:red;
-    border-radius:50%;
-    width:22px;
-    height:22px;
-    font-size:12px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-weight:bold;
-}
-
-/* TRANSPORT CIRCLES */
-.transportCircles{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    margin:15px auto;
-}
-
-.transportCircle{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    background:red;
-    color:white;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    font-size:11px;
-    font-weight:bold;
-    cursor:pointer;
-    box-shadow:0 0 15px rgba(255,0,0,0.6);
-    animation:pulse 2s infinite;
-}
-
-.transportCircle.selected{
-    background:#ff4444;
-    box-shadow:0 0 25px rgba(255,0,0,1);
-    transform:scale(1.1);
-}
-
 .totalBox{
-    width:80%;
-    margin:10px auto;
-    padding:12px;
-    background:#ffcccc;
-    border:2px solid red;
-    border-radius:30px;
-    color:red;
-    font-weight:bold;
-    font-size:18px;
+    width:80%;margin:10px auto;padding:12px;background:#ffcccc;border:2px solid red;border-radius:30px;
+    color:red;font-weight:bold;font-size:18px;
 }
 
-/* ADMIN BOXES */
-.adminTop{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:20px;
-}
-
-.adminBottom{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:20px;
-    padding-bottom:120px;
-}
-
+.adminTop{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:20px;}
+.adminBottom{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:20px;padding-bottom:120px;}
 .adminCard{
-    width:130px;
-    min-height:100px;
-    background:red;
-    color:white;
-    border-radius:20px;
-    padding:10px;
-    font-size:12px;
+    width:130px;min-height:100px;background:red;color:white;border-radius:20px;padding:10px;font-size:12px;
 }
-
 .businessCard{
-    width:180px;
-    background:red;
-    color:white;
-    border-radius:20px;
-    padding:10px;
-    margin:10px auto;
-    font-size:11px;
+    width:180px;background:red;color:white;border-radius:20px;padding:10px;margin:10px auto;font-size:11px;
 }
-
 .removedCard{
-    width:180px;
-    background:#660000;
-    color:white;
-    border-radius:20px;
-    padding:10px;
-    margin:10px auto;
-    font-size:10px;
+    width:180px;background:#660000;color:white;border-radius:20px;padding:10px;margin:10px auto;font-size:10px;
 }
 
-/* BACK CIRCLE - RIGHT SIDE SMALL */
-.circleArea{
-    position:fixed;
-    bottom:10px;
-    width:100%;
-    left:0;
-    display:flex;
-    justify-content:flex-end;
-    padding-right:20px;
-}
-
+.circleArea{position:fixed;bottom:10px;width:100%;left:0;}
 .circle{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    background:red;
-    color:white;
-    display:inline-flex;
-    justify-content:center;
-    align-items:center;
-    margin:10px;
-    font-size:10px;
-    font-weight:bold;
-    cursor:pointer;
+    width:75px;height:75px;border-radius:50%;background:red;color:white;display:inline-flex;
+    justify-content:center;align-items:center;margin:18px;font-size:11px;font-weight:bold;cursor:pointer;
 }
 
-.circle.disabled{
-    background:#ccc;
-    cursor:not-allowed;
-    animation:none;
-}
-
-/* MY SITE ANIMATED CIRCLES */
-.mySiteCircles{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:25px;
-    margin-top:40px;
-}
-
+.mySiteCircles{display:flex;flex-direction:column;align-items:center;gap:30px;margin-top:60px;}
 .mySiteCircle{
-    width:110px;
-    height:110px;
-    border-radius:50%;
-    background:red;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:14px;
-    font-weight:bold;
-    cursor:pointer;
-    box-shadow:0 0 20px rgba(255,0,0,0.6);
-    animation:pulse 2s infinite;
+    width:110px;height:110px;border-radius:50%;background:red;color:white;display:flex;
+    justify-content:center;align-items:center;font-size:14px;font-weight:bold;cursor:pointer;
+    box-shadow:0 0 20px rgba(255,0,0,0.6);animation:pulse 2s infinite;
 }
-
 @keyframes pulse{
     0%{transform:scale(1);box-shadow:0 0 20px rgba(255,0,0,0.6);}
     50%{transform:scale(1.1);box-shadow:0 0 35px rgba(255,0,0,0.9);}
     100%{transform:scale(1);box-shadow:0 0 20px rgba(255,0,0,0.6);}
 }
+.mySiteCircle:active{transform:scale(0.95);}
 
-.mySiteCircle:active{
-    transform:scale(0.95);
-}
-
-.businessStats{
-    width:85%;
-    margin:15px auto;
-    padding:15px;
-    background:#ffe6e6;
-    border:2px solid red;
-    border-radius:20px;
-    color:red;
-    font-weight:bold;
-}
-
-/* BUTTON ROW IN ITEMS */
-.itemBtnRow{
-    display:flex;
-    justify-content:center;
-    gap:8px;
-    margin-top:8px;
-}
-
-.itemBtnRow button{
-    flex:1;
-    padding:6px 8px;
-    border:none;
-    border-radius:15px;
-    background:white;
-    color:red;
-    font-size:9px;
-    font-weight:bold;
-    cursor:pointer;
-    margin:0;
-}
-
-/* MEDIA */
 img, video{
-    width:2cm;
-    height:2cm;
-    object-fit:cover;
-    border-radius:10px;
-    margin-top:0;
+    width:2cm;height:2cm;object-fit:cover;border-radius:10px;margin-top:0;
 }
+h2{margin-top:20px;}
+h3{margin:8px 0;}
 
-h2{
-    margin-top:20px;
-}
-
-h3{
-    margin:8px 0;
-}
-
-/* LOGIN BUTTON */
 .loginCircle{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    background:red;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin:20px auto;
-    font-weight:bold;
-    cursor:pointer;
+    width:90px;height:90px;border-radius:50%;background:red;color:white;display:flex;
+    justify-content:center;align-items:center;margin:20px auto;font-weight:bold;cursor:pointer;
 }
+button{padding:5px 10px;border:none;border-radius:20px;background:white;color:red;font-size:10px;margin-top:5px;}
+a{color:white;text-decoration:none;font-weight:bold;font-size:11px;}
 
-button{
-    padding:5px 10px;
-    border:none;
-    border-radius:20px;
-    background:white;
-    color:red;
-    font-size:10px;
-    margin-top:5px;
-    cursor:pointer;
-}
-
-a{
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
-    font-size:11px;
-}
-
-/* IMAGE POPUP ZOOM */
 #imageModal{
-    display:none;
-    position:fixed;
-    z-index:10000;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.9);
-    justify-content:center;
-    align-items:center;
+    display:none;position:fixed;z-index:10000;left:0;top:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.9);justify-content:center;align-items:center;
 }
-
-#imageModal img, #imageModal video{
-    max-width:90%;
-    max-height:90%;
-    width:auto;
-    height:auto;
-    border-radius:10px;
-}
-
+#imageModal img, #imageModal video{max-width:90%;max-height:90%;width:auto;height:auto;border-radius:10px;}
 #closeModal{
-    position:absolute;
-    top:20px;
-    right:35px;
-    color:white;
-    font-size:40px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.qtyControls{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:10px;
-    margin:5px 0;
-}
-
-.qtyBtn{
-    width:25px;
-    height:25px;
-    border-radius:50%;
-    background:white;
-    color:red;
-    font-weight:bold;
-    border:none;
-    font-size:16px;
-    padding:0;
+    position:absolute;top:20px;right:35px;color:white;font-size:40px;font-weight:bold;cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- WELCOME -->
 <div id="welcomeScreen">
     <div class="welcomeText">WELCOME</div>
     <div class="powered">POWERED BY SIMES AGENCIES</div>
 </div>
 
-<!-- LOGIN -->
 <div id="loginPage" class="page active">
     <h2>LOG IN</h2>
     <input type="text" id="loginUsername" placeholder="Username">
@@ -537,13 +158,12 @@ a{
     </div>
 </div>
 
-<!-- SIGNUP -->
 <div id="signupPage" class="page">
     <h2>SIGN UP</h2>
     <input type="text" id="signupUsername" placeholder="Username">
-    <input type="text" id="signupId" placeholder="8 Digit ID Number" maxlength="8">
-    <input type="text" id="signupPhone" placeholder="10 Digit Phone Number" maxlength="10">
-    <input type="email" id="signupEmail" placeholder="Email Address">
+    <input type="text" id="signupId" placeholder="ID Number">
+    <input type="text" id="signupPhone" placeholder="Phone Number">
+    <input type="email" id="signupEmail" placeholder="Email">
     <div class="passwordWrap">
         <input type="password" id="signupPassword" maxlength="4" placeholder="4 Digit Password">
         <button class="togglePass" onclick="togglePassword('signupPassword',this)">👁</button>
@@ -554,7 +174,6 @@ a{
     </div>
 </div>
 
-<!-- FORGOT PASSWORD -->
 <div id="forgotBox" class="page">
     <h2>RESET PASSWORD</h2>
 
@@ -584,11 +203,7 @@ a{
     </div>
 </div>
 
-<!-- MARKET -->
 <div id="marketPage" class="page">
-    <div class="basketIcon" onclick="openBasket()">
-        🧺<span class="basketCount" id="basketCount">0</span>
-    </div>
     <h2>MARKET PLACE</h2>
     <input type="text" id="searchBar" placeholder="Search items..." oninput="searchItems()">
     <div id="marketItems"></div>
@@ -598,31 +213,6 @@ a{
     </div>
 </div>
 
-<!-- BASKET -->
-<div id="basketPage" class="page">
-    <h2>MY BASKET 🧺</h2>
-    <div id="basketItems"></div>
-    
-    <div class="transportCircles" id="basketTransport" style="display:none;">
-        <div class="transportCircle" id="basketInsideCircle" onclick="selectBasketTransport('inside',150)">
-            INSIDE<br>TOWN<br>+150/item
-        </div>
-        <div class="transportCircle" id="basketOutsideCircle" onclick="selectBasketTransport('outside',300)">
-            OUTSIDE<br>TOWN<br>+300/item
-        </div>
-    </div>
-    
-    <div class="totalBox" id="basketTotal" style="display:none;">
-        Items Total: Ksh 0
-    </div>
-    
-    <div class="circleArea">
-        <div class="circle disabled" id="checkoutBtn" onclick="checkoutBasket()">CHECKOUT</div>
-        <div class="circle" onclick="openMarket()">BACK</div>
-    </div>
-</div>
-
-<!-- BUSINESS -->
 <div id="businessPage" class="page">
     <h2>BUSINESS REGISTRATION</h2>
     <h3>Monthly Fee: Ksh 500</h3>
@@ -635,7 +225,6 @@ a{
     </div>
 </div>
 
-<!-- MPESA -->
 <div id="mpesaPage" class="page">
     <h2>MPESA PAYMENT</h2>
     <h3>Pay Ksh 500 to: 0741437977</h3>
@@ -645,10 +234,8 @@ a{
     </div>
 </div>
 
-<!-- MY SITE -->
 <div id="mySitePage" class="page">
     <h2>MY SITE</h2>
-    <div id="businessStatsBox"></div>
     <div class="mySiteCircles">
         <div class="mySiteCircle" onclick="openActiveItems()">ACTIVE</div>
         <div class="mySiteCircle" onclick="openDeliveries()">DELIVERIES</div>
@@ -659,7 +246,6 @@ a{
     </div>
 </div>
 
-<!-- ACTIVE ITEMS -->
 <div id="activeItemsPage" class="page">
     <h2>MY ACTIVE ITEMS</h2>
     <div id="myActiveItems"></div>
@@ -668,7 +254,6 @@ a{
     </div>
 </div>
 
-<!-- DELIVERIES -->
 <div id="deliveriesPage" class="page">
     <h2>PENDING DELIVERIES</h2>
     <div id="myDeliveries"></div>
@@ -677,7 +262,6 @@ a{
     </div>
 </div>
 
-<!-- POST -->
 <div id="postPage" class="page">
     <h2>POST ITEM</h2>
     <input type="text" id="itemName" placeholder="Item">
@@ -691,19 +275,13 @@ a{
         <option value="Till">Till</option>
         <option value="Pochi">Pochi</option>
     </select>
-    <div id="mpesaArea">
-        <input type="text" id="mpesaNo" placeholder="Mpesa Number">
-    </div>
+    <div id="mpesaArea"><input type="text" id="mpesaNo" placeholder="Mpesa Number"></div>
     <div id="paybillArea" style="display:none;">
         <input type="text" id="paybillNo" placeholder="Paybill Number">
         <input type="text" id="accNo" placeholder="Account Number">
     </div>
-    <div id="tillArea" style="display:none;">
-        <input type="text" id="tillNo" placeholder="Till Number">
-    </div>
-    <div id="pochiArea" style="display:none;">
-        <input type="text" id="pochiNo" placeholder="Pochi Number">
-    </div>
+    <div id="tillArea" style="display:none;"><input type="text" id="tillNo" placeholder="Till Number"></div>
+    <div id="pochiArea" style="display:none;"><input type="text" id="pochiNo" placeholder="Pochi Number"></div>
     <input type="file" id="mediaFile" accept="image/*,video/*" multiple>
     <small style="color:white;">Max 5 photos from any folder</small>
     <div class="circleArea">
@@ -712,24 +290,18 @@ a{
     </div>
 </div>
 
-<!-- BUY -->
 <div id="buyPage" class="page">
     <h2>BUY ITEM</h2>
     <h3 id="buyItemName"></h3>
     <h3 id="buyItemPrice"></h3>
 
-    <div class="transportCircles">
-        <div class="transportCircle" id="insideCircle" onclick="selectTransport('inside',150)">
-            INSIDE<br>TOWN<br>+150
-        </div>
-        <div class="transportCircle" id="outsideCircle" onclick="selectTransport('outside',300)">
-            OUTSIDE<br>TOWN<br>+300
-        </div>
+    <div class="transportBox" id="transportSelector" onclick="toggleTransport()">Transport: Select</div>
+    <div class="transportOptions" id="transportOptions">
+        <button class="transportBtn" onclick="selectTransport('inside',150)">Inside Town +150</button>
+        <button class="transportBtn" onclick="selectTransport('outside',300)">Outside Town +300</button>
     </div>
 
-    <div class="totalBox" id="totalBox" style="display:none;">
-        Total: Ksh 0
-    </div>
+    <div class="totalBox" id="totalBox" style="display:none;">Total: Ksh 0</div>
 
     <input type="tel" id="buyerPhoneNumber" placeholder="Enter Your Mpesa Number">
     <div class="circleArea">
@@ -738,59 +310,79 @@ a{
     </div>
 </div>
 
-<!-- ADMIN -->
 <div id="adminPage" class="page">
     <h2>ADMIN PANEL</h2>
     <div class="adminTop" id="adminTop"></div>
     <div class="adminBottom" id="adminBottom"></div>
     <div class="circleArea">
-        <div class="circle" onclick="resetAllData()">RESET ALL</div>
         <div class="circle" onclick="logout()">EXIT</div>
     </div>
 </div>
 
-<!-- IMAGE POPUP MODAL -->
 <div id="imageModal" onclick="closeImageModal()">
     <span id="closeModal">&times;</span>
     <img id="modalImage" style="display:none;">
     <video id="modalVideo" controls style="display:none;"></video>
 </div>
 
+<!-- Firebase (Firestore for users) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDiJslY_7xcSSxN-2V0jGhinUrrSUAhxLg",
+    authDomain: "simes1-abedd.firebaseapp.com",
+    projectId: "simes1-abedd",
+    storageBucket: "simes1-abedd.firebasestorage.app",
+    messagingSenderId: "15118142491",
+    appId: "1:15118142491:web:97ec822bc1e74c32bfbcbe",
+    measurementId: "G-FEW1LN945X"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose helpers to regular script
+  window.__fb = {
+    db,
+    createUser: async (doc) => addDoc(collection(db, "users"), doc),
+    findUserByUsernameAndPassword: async (username, password) => {
+      const q = query(
+        collection(db, "users"),
+        where("username", "==", username),
+        where("password", "==", password)
+      );
+      const snap = await getDocs(q);
+      if (snap.empty) return null;
+      const d = snap.docs[0];
+      return { id: d.id, ...d.data() };
+    },
+    findUserByUsername: async (username) => {
+      const q = query(collection(db, "users"), where("username", "==", username));
+      const snap = await getDocs(q);
+      if (snap.empty) return null;
+      const d = snap.docs[0];
+      return { id: d.id, ...d.data() };
+    },
+    findUserById: async (idNumber) => {
+      const q = query(collection(db, "users"), where("id", "==", idNumber));
+      const snap = await getDocs(q);
+      if (snap.empty) return null;
+      const d = snap.docs[0];
+      return { id: d.id, ...d.data() };
+    }
+  };
+</script>
+
 <script>
-setTimeout(()=>{
-    document.getElementById("welcomeScreen").style.display="none";
-},3000);
+setTimeout(()=>{ document.getElementById("welcomeScreen").style.display="none"; },3000);
 
-function signup()
-let username = signupUsername.value.trim();
-let email = signupEmail.value.trim();
-let password = signupPassword.value.trim();
-
-if(username==="" || email==="" || password===""){
-alert("Fill all fields");
-return;
-}
-
-try{
-
-const userCredential =
-await createUserWithEmailAndPassword(auth,email,password);
-
-await addDoc(collection(db,"users"),{
-username: username,
-email: email,
-phone: signupPhone.value,
-id: signupId.value,
-businessApproved:false
-});
-
-alert("Account Created");
-
-showPage("loginPage");
-
-}catch(error){
-alert(error.message);
-}
+let users = []; // not used for auth anymore
+let businesses = JSON.parse(localStorage.getItem("businesses")) || [];
+let products = JSON.parse(localStorage.getItem("products")) || [];
+let sales = JSON.parse(localStorage.getItem("sales")) || [];
+let removedBusinesses = JSON.parse(localStorage.getItem("removedBusinesses")) || [];
 
 let currentUser = null;
 let selectedProduct = null;
@@ -798,64 +390,39 @@ let resetCodeSent = null;
 let resetAccount = null;
 let selectedTransport = null;
 let transportCost = 0;
-let basket = [];
-let basketTransport = null;
-let basketTransportCost = 0;
 
-/* TOGGLE PASSWORD */
 function togglePassword(inputId, btn){
     let input = document.getElementById(inputId);
-    if(input.type === "password"){
-        input.type = "text";
-        btn.innerText = "🙈";
-    }else{
-        input.type = "password";
-        btn.innerText = "👁";
-    }
+    input.type = input.type === "password" ? "text" : "password";
+    btn.innerText = input.type === "password" ? "👁" : "🙈";
 }
 
-/* CLEAR INPUTS */
 function clearInputs(){
     document.querySelectorAll("input").forEach(input=>{
         if(input.type!== "file" && input.id!== "searchBar") input.value="";
-        if(input.type === "text" && input.id.includes("Password")) input.type = "password";
     });
-    document.querySelectorAll("select").forEach(select=>{
-        select.selectedIndex=0;
-    });
-    document.querySelectorAll(".togglePass").forEach(btn=>{
-        btn.innerText = "👁";
-    });
+    document.querySelectorAll("select").forEach(select=>{ select.selectedIndex=0; });
+    document.querySelectorAll(".togglePass").forEach(btn=>{ btn.innerText = "👁"; });
     selectedTransport = null;
     transportCost = 0;
-    document.getElementById("insideCircle").classList.remove("selected");
-    document.getElementById("outsideCircle").classList.remove("selected");
 }
 
-/* PAGE DISPLAY */
 function showPage(id){
     document.getElementById("welcomeScreen").style.display="none";
-    document.querySelectorAll(".page").forEach(page=>{
-        page.classList.remove("active");
-    });
+    document.querySelectorAll(".page").forEach(page=>{ page.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
     clearInputs();
     if(id === "adminPage") loadAdmin();
-    if(id === "marketPage") {
-        document.getElementById("searchBar").value = "";
-        loadMarket();
-        updateBasketCount();
-    }
+    if(id === "marketPage") { document.getElementById("searchBar").value = ""; loadMarket(); }
     if(id === "activeItemsPage") loadActiveItems();
     if(id === "deliveriesPage") loadDeliveries();
-    if(id === "basketPage") loadBasket();
-    if(id === "mySitePage") loadBusinessStats();
     if(id === "buyPage"){
-                document.getElementById("totalBox").style.display = "none";
+        document.getElementById("transportOptions").style.display = "none";
+        document.getElementById("totalBox").style.display = "none";
+        document.getElementById("transportSelector").innerText = "Transport: Select";
     }
 }
 
-/* PAYMENT VIEW */
 function paymentView(){
     let method = paymentMethod.value;
     mpesaArea.style.display="none";
@@ -868,44 +435,64 @@ function paymentView(){
     if(method==="Pochi") pochiArea.style.display="block";
 }
 
-/* SIGNUP */
-function signup(){
+/* SIGNUP -> Firestore */
+async function signup(){
     let username = signupUsername.value.trim();
     let id = signupId.value.trim();
     let phone = signupPhone.value.trim();
     let email = signupEmail.value.trim();
     let password = signupPassword.value.trim();
-    if(username===""||id===""||phone===""||email===""||password===""){alert("Fill all fields");return;}
+
+    if(username===""||id===""||phone===""||password===""){alert("Fill all fields");return;}
     if(password.length!== 4){alert("Password must be 4 digits");return;}
-    if(id.length!== 8 ||!/^\d{8}$/.test(id)){alert("ID Number must be exactly 8 digits");return;}
-    if(phone.length!== 10 ||!/^\d{10}$/.test(phone)){alert("Phone Number must be exactly 10 digits");return;}
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Enter a valid email address");return;}
-    let existing = users.find(user => user.username === username || user.id === id || user.email === email);
-    if(existing){alert("Username, ID or Email already exists");return;}
-    users.push({username,id,phone,email,password,businessApproved:false});
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("Account Created");
+
+    const existingUsername = await window.__fb.findUserByUsername(username);
+    if(existingUsername){alert("Username already exists");return;}
+
+    const existingId = await window.__fb.findUserById(id);
+    if(existingId){alert("ID already exists");return;}
+
+    await window.__fb.createUser({
+      username,
+      id,
+      phone,
+      email,
+      password,
+      businessApproved:false,
+      createdAt: Date.now()
+    });
+
+    alert("Account Created (saved in Firebase).");
     showPage("loginPage");
 }
 
-/* LOGIN */
-function login(){
+/* LOGIN -> Firestore */
+async function login(){
     let username = loginUsername.value.trim();
     let password = loginPassword.value.trim();
+
     if(username==="admin" && password==="1234"){
         showPage("adminPage");
         return;
     }
-    let user = users.find(user => user.username===username && user.password===password);
+
+    if(!window.__fb){
+        alert("Firebase not ready. Try again.");
+        return;
+    }
+
+    const user = await window.__fb.findUserByUsernameAndPassword(username, password);
     if(!user){alert("Wrong Details");return;}
-    currentUser=user;
-    basket = allBaskets[currentUser.username] || [];
+
+    currentUser = user;
     updateBusinessButton();
     showPage("marketPage");
 }
 
-/* BUSINESS BUTTON */
 function updateBusinessButton(){
+    // businessApproved is kept in Firestore user doc
+    // but your businesses are still localStorage for now
+    // so we keep your original UI:
     if(currentUser.businessApproved){
         businessButton.innerText="MY SITE";
         businessButton.onclick=openMySite;
@@ -915,19 +502,15 @@ function updateBusinessButton(){
     }
 }
 
-/* SEARCH ITEMS */
-function searchItems(){
-    loadMarket();
-}
+function searchItems(){ loadMarket(); }
 
-/* MARKET */
 function loadMarket(){
     marketItems.innerHTML="";
     let searchTerm = document.getElementById("searchBar").value.toLowerCase().trim();
 
     products.forEach((product,index)=>{
         if(product.stock <= 0) return;
-        if(searchTerm!== "" &&!product.item.toLowerCase().includes(searchTerm)) return;
+        if(searchTerm!== "" && !product.item.toLowerCase().includes(searchTerm)) return;
 
         let mediaHTML="";
         if(product.mediaArray && product.mediaArray.length > 0){
@@ -947,6 +530,7 @@ function loadMarket(){
                 mediaHTML=`<video controls src="${product.media}" onclick="viewProductMediaByIndex(${index})"></video>`;
             }
         }
+
         marketItems.innerHTML += `
         <div class="marketItem">
             ${mediaHTML}
@@ -955,15 +539,12 @@ function loadMarket(){
             <p>Ksh ${product.price}</p>
             <p>${product.paymentMethod}</p>
             <p><a href="https://wa.me/${product.sellerPhone}" target="_blank">WhatsApp</a></p>
-            <div class="itemBtnRow">
-                <button onclick="addToBasket(${index})">ADD TO BASKET</button>
-                <button onclick="openBuyMenu(${index})">BUY NOW</button>
-            </div>
+            <button onclick="openBuyMenu(${index})">BUY</button>
+        </div>
         `;
     });
 }
 
-/* IMAGE MODAL ZOOM */
 function openImageModal(src, type){
     let modal = document.getElementById("imageModal");
     let modalImg = document.getElementById("modalImage");
@@ -1002,234 +583,27 @@ function closeImageModal(){
     document.getElementById("modalVideo").pause();
 }
 
-/* BASKET FUNCTIONS - PER USER */
-function updateBasketCount(){
-    let count = basket.reduce((sum, item) => sum + Number(item.qty), 0);
-    document.getElementById("basketCount").innerText = count;
+function toggleTransport(){
+    let options = document.getElementById("transportOptions");
+    options.style.display = options.style.display === "none"? "block" : "none";
 }
 
-function saveBasket(){
-    allBaskets[currentUser.username] = basket;
-    localStorage.setItem("allBaskets", JSON.stringify(allBaskets));
-}
-
-function addToBasket(productIndex){
-    let product = products[productIndex];
-    let existing = basket.find(item => item.productIndex === productIndex);
-
-    if(existing){
-        if(existing.qty < product.stock){
-            existing.qty++;
-        }else{
-            alert("No more stock available");
-            return;
-        }
-    }else{
-        basket.push({
-            productIndex: productIndex,
-            item: product.item,
-            price: Number(product.price),
-            seller: product.owner,
-            sellerPhone: product.sellerPhone,
-            media: product.media,
-            mediaType: product.mediaType,
-            maxStock: product.stock,
-            qty: 1
-        });
-    }
-
-    saveBasket();
-    updateBasketCount();
-    alert(`${product.item} added to basket`);
-}
-
-function openBasket(){
-    showPage("basketPage");
-}
-
-function loadBasket(){
-    basketItems.innerHTML="";
-    let total = 0;
-    basketTransport = null;
-    basketTransportCost = 0;
-
-    if(basket.length === 0){
-        basketItems.innerHTML = "<h3>Basket is empty</h3>";
-        document.getElementById("basketTotal").style.display = "none";
-        document.getElementById("basketTransport").style.display = "none";
-        document.getElementById("checkoutBtn").classList.add("disabled");
-        return;
-    }
-
-    basket.forEach((item, index)=>{
-        total += Number(item.price) * Number(item.qty);
-        let mediaHTML = "";
-        if(item.media){
-            if(item.mediaType.includes("image")){
-                mediaHTML=`<img src="${item.media}">`;
-            }else{
-                mediaHTML=`<video controls src="${item.media}"></video>`;
-            }
-        }
-
-        basketItems.innerHTML += `
-        <div class="basketItem">
-            ${mediaHTML}
-            <h3>${item.item}</h3>
-            <p>Ksh ${item.price} each</p>
-            <div class="qtyControls">
-                <button class="qtyBtn" onclick="updateQty(${index}, -1)">-</button>
-                <span>${item.qty}</span>
-                <button class="qtyBtn" onclick="updateQty(${index}, 1)">+</button>
-            </div>
-            <p>Subtotal: Ksh ${Number(item.price) * Number(item.qty)}</p>
-            <button onclick="removeFromBasket(${index})">REMOVE</button>
-        </div>
-        `;
-    });
-
-    document.getElementById("basketTransport").style.display = "flex";
-    document.getElementById("basketTotal").style.display = "block";
-    document.getElementById("basketTotal").innerText = `Items Total: Ksh ${total}\nSelect transport below`;
-    document.getElementById("checkoutBtn").classList.add("disabled");
-
-    document.getElementById("basketInsideCircle").classList.remove("selected");
-    document.getElementById("basketOutsideCircle").classList.remove("selected");
-}
-
-function updateQty(index, change){
-    basket[index].qty += change;
-    if(basket[index].qty <= 0){
-        basket.splice(index, 1);
-    }else if(basket[index].qty > basket[index].maxStock){
-        basket[index].qty = basket[index].maxStock;
-        alert("Maximum stock reached");
-    }
-    saveBasket();
-    loadBasket();
-    updateBasketCount();
-}
-
-function removeFromBasket(index){
-    basket.splice(index, 1);
-    saveBasket();
-    loadBasket();
-    updateBasketCount();
-}
-
-function selectBasketTransport(type, cost){
-    basketTransport = type;
-    basketTransportCost = cost;
-    document.getElementById("basketInsideCircle").classList.remove("selected");
-    document.getElementById("basketOutsideCircle").classList.remove("selected");
-
-    if(type === 'inside'){
-        document.getElementById("basketInsideCircle").classList.add("selected");
-    }else{
-        document.getElementById("basketOutsideCircle").classList.add("selected");
-    }
-
-    updateBasketTotal();
-}
-
-function updateBasketTotal(){
-    let totalQty = basket.reduce((sum, item) => sum + Number(item.qty), 0);
-    let subtotal = basket.reduce((sum, item) => sum + (Number(item.price) * Number(item.qty)), 0);
-    let transportTotal = basketTransportCost * totalQty;
-    let total = subtotal + transportTotal;
-
-    document.getElementById("basketTotal").innerText = `Items: Ksh ${subtotal}\nTransport (${basketTransport === 'inside'? 'Inside Town':'Outside Town'}): Ksh ${transportTotal}\n\nTOTAL: Ksh ${total}`;
-    document.getElementById("checkoutBtn").classList.remove("disabled");
-}
-
-function checkoutBasket(){
-    if(basket.length === 0){
-        alert("Basket is empty");
-        return;
-    }
-
-    if(!basketTransport){
-        alert("Please select transport type first");
-        return;
-    }
-
-    let totalQty = basket.reduce((sum, item) => sum + Number(item.qty), 0);
-    let subtotal = basket.reduce((sum, item) => sum + (Number(item.price) * Number(item.qty)), 0);
-    let transportTotal = basketTransportCost * totalQty;
-    let total = subtotal + transportTotal;
-
-    let pin = prompt(`Enter MPESA PIN to pay Ksh ${total}\n(Items: ${subtotal} + Transport: ${transportTotal} for ${totalQty} items)`);
-    if(pin === null || pin === ""){
-        alert("Payment cancelled");
-        return;
-    }
-
-    if(pin.length < 4){
-        alert("Invalid PIN");
-        return;
-    }
-
-    let location = prompt("Payment Successful!\n\nPlease share your delivery location (e.g. building name, street, landmark):");
-    if(location === null || location.trim() === ""){
-        alert("Location required for delivery");
-        return;
-    }
-
-    basket.forEach(item => {
-        let product = products[item.productIndex];
-        if(product){
-            product.stock -= item.qty;
-
-            sales.push({
-                item: item.item,
-                amount: Number(item.price) * Number(item.qty),
-                transport: Number(basketTransportCost) * Number(item.qty),
-                total: (Number(item.price) * Number(item.qty)) + (Number(basketTransportCost) * Number(item.qty)),
-                buyer: currentUser.phone,
-                buyerLocation: location.trim(),
-                seller: item.seller,
-                sellerPhone: item.sellerPhone,
-                date: new Date().getTime(),
-                status: "Pending Delivery"
-            });
-
-            if(product.stock <= 0){
-                products.splice(item.productIndex, 1);
-            }
-        }
-    });
-
-    localStorage.setItem("products", JSON.stringify(products));
-    localStorage.setItem("sales", JSON.stringify(sales));
-    basket = [];
-    saveBasket();
-    updateBasketCount();
-    alert(`Order Placed Successfully!\n${totalQty} items, Transport: ${basketTransport === 'inside'? 'Inside Town':'Outside Town'}\nSellers will contact you for delivery.`);
-    openMarket();
-}
-
-/* TRANSPORT CIRCLES */
 function selectTransport(type, cost){
     selectedTransport = type;
     transportCost = cost;
-    document.getElementById("insideCircle").classList.remove("selected");
-    document.getElementById("outsideCircle").classList.remove("selected");
-    if(type === 'inside'){
-        document.getElementById("insideCircle").classList.add("selected");
-    }else{
-        document.getElementById("outsideCircle").classList.add("selected");
-    }
+    document.getElementById("transportSelector").innerText =
+      type === 'inside' ? `Transport: Inside Town +${cost}` : `Transport: Outside Town +${cost}`;
+    document.getElementById("transportOptions").style.display = "none";
     updateTotal();
 }
 
 function updateTotal(){
     let product = products[selectedProduct];
-    let total = Number(product.price) + Number(transportCost);
+    let total = product.price + transportCost;
     document.getElementById("totalBox").style.display = "block";
     document.getElementById("totalBox").innerText = `Total: Ksh ${total}`;
 }
 
-/* BUY */
 function openBuyMenu(index){
     selectedProduct=index;
     let product = products[index];
@@ -1242,41 +616,21 @@ function openBuyMenu(index){
 }
 
 function confirmBuy(){
-    if(!selectedTransport){
-        alert("Please select transport option");
-        return;
-    }
+    if(!selectedTransport){ alert("Please select transport option"); return; }
 
     let phoneNumber = buyerPhoneNumber.value.trim();
     let product = products[selectedProduct];
-    let total = Number(product.price) + Number(transportCost);
+    let total = product.price + transportCost;
 
-    if(phoneNumber === ""){
-        alert("Enter your Mpesa number");
-        return;
-    }
-
-    if(!/^(07|01)\d{8}$/.test(phoneNumber)){
-        alert("Enter valid Mpesa number e.g 0712345678");
-        return;
-    }
+    if(phoneNumber === ""){ alert("Enter your Mpesa number"); return; }
+    if(!/^(07|01)\d{8}$/.test(phoneNumber)){ alert("Enter valid Mpesa number e.g 0712345678"); return; }
 
     let pin = prompt(`Enter MPESA PIN to pay Ksh ${total}\n(Item: ${product.price} + Transport: ${transportCost})`);
-    if(pin === null || pin === ""){
-        alert("Payment cancelled");
-        return;
-    }
-
-    if(pin.length < 4){
-        alert("Invalid PIN");
-        return;
-    }
+    if(pin === null || pin === ""){ alert("Payment cancelled"); return; }
+    if(pin.length < 4){ alert("Invalid PIN"); return; }
 
     let location = prompt("Payment Successful!\n\nPlease share your delivery location (e.g. building name, street, landmark):");
-    if(location === null || location.trim() === ""){
-        alert("Location required for delivery");
-        return;
-    }
+    if(location === null || location.trim() === ""){ alert("Location required for delivery"); return; }
 
     buyItem(selectedProduct, phoneNumber, location.trim(), total);
     alert("Order Placed Successfully!\nSeller will contact you for delivery.");
@@ -1289,9 +643,9 @@ function buyItem(index, buyerPhone, buyerLocation, totalPaid){
         product.stock -=1;
         sales.push({
             item:product.item,
-            amount:Number(product.price),
-            transport:Number(transportCost),
-            total:Number(totalPaid),
+            amount:product.price,
+            transport:transportCost,
+            total:totalPaid,
             buyer:buyerPhone,
             buyerLocation:buyerLocation,
             seller:product.owner,
@@ -1299,53 +653,35 @@ function buyItem(index, buyerPhone, buyerLocation, totalPaid){
             date:new Date().getTime(),
             status:"Pending Delivery"
         });
-        if(product.stock<=0){
-            products.splice(index,1);
-        }
+        if(product.stock<=0){ products.splice(index,1); }
         localStorage.setItem("products", JSON.stringify(products));
         localStorage.setItem("sales", JSON.stringify(sales));
         loadMarket();
     }
 }
 
-/* BUSINESS */
-function openBusiness(){
-    showPage("businessPage");
-}
+function openBusiness(){ showPage("businessPage"); }
 
 function registerBusiness(){
     let businessNameVal = businessName.value.trim();
     let clientNoVal = clientNo.value.trim();
     let businessIdVal = businessId.value.trim();
 
-    if(businessNameVal===""||clientNoVal===""||businessIdVal===""){
-        alert("Fill all fields");
-        return;
-    }
+    if(businessNameVal===""||clientNoVal===""||businessIdVal===""){ alert("Fill all fields"); return; }
 
-    alert("Business Registration Fee: Ksh 500\n\nYou will be prompted to pay Ksh 500");
+    let fee = prompt("Enter Ksh 500 monthly fee to register business");
+    if(fee === null || fee === ""){ alert("Registration cancelled"); return; }
 
-    let clientNumber = prompt("Enter your Mpesa number to pay Ksh 500:");
-    if(clientNumber === null || clientNumber === ""){
-        alert("Registration cancelled");
-        return;
-    }
+    let feeAmount = Number(fee);
+    if(feeAmount!== 500){ alert("Invalid amount. Fee must be exactly Ksh 500"); return; }
 
-    if(!/^(07|01)\d{8}$/.test(clientNumber)){
-        alert("Enter valid Mpesa number e.g 0712345678");
-        return;
-    }
+    let clientNumber = prompt("Enter your Mpesa number for payment");
+    if(clientNumber === null || clientNumber === ""){ alert("Registration cancelled"); return; }
+    if(!/^(07|01)\d{8}$/.test(clientNumber)){ alert("Enter valid Mpesa number e.g 0712345678"); return; }
 
     let pin = prompt("Enter MPESA PIN to pay Ksh 500");
-    if(pin === null || pin === ""){
-        alert("Registration cancelled");
-        return;
-    }
-
-    if(pin.length < 4){
-        alert("Invalid PIN");
-        return;
-    }
+    if(pin === null || pin === ""){ alert("Registration cancelled"); return; }
+    if(pin.length < 4){ alert("Invalid PIN"); return; }
 
     let business={
         username:currentUser.username,
@@ -1363,25 +699,21 @@ function registerBusiness(){
     openMarket();
 }
 
-/* VERIFY */
 function verifyPayment(){
     let code=transactionCode.value.trim();
     if(code===""){alert("Enter transaction code");return;}
     alert("This step is now automated. Use business registration instead.");
 }
 
-/* ADMIN */
 function loadAdmin(){
     adminTop.innerHTML="";
     adminBottom.innerHTML="";
     let totalSales=0;
     let totalFees=0;
     let pending=0;
-    sales.forEach(s=>{totalSales += Number(s.total);});
-    businesses.forEach(b=>{
-        totalFees += Number(b.amountPaid);
-        if(!b.approved){pending++;}
-    });
+    sales.forEach(s=>{totalSales += s.total;});
+    businesses.forEach(b=>{ totalFees += b.amountPaid; if(!b.approved){pending++;} });
+
     adminTop.innerHTML += `
     <div class="adminCard"><h3>PENDING</h3><p>${pending}</p></div>
     <div class="adminCard"><h3>SALES</h3><p>Ksh ${totalSales}</p></div>
@@ -1417,51 +749,29 @@ function loadAdmin(){
                 <p>Owner: ${removed.username}</p>
                 <p>Removed: ${new Date(removed.removedDate).toLocaleDateString()}</p>
                 <p>Reason: ${removed.reason}</p>
-            </div>
-            `;
+            </div>`;
         });
     }
 }
 
-/* APPROVE */
 function approveBusiness(index){
     businesses[index].approved=true;
-    let user=users.find(u => u.username===businesses[index].username);
-    if(user){user.businessApproved=true;}
-    localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("businesses", JSON.stringify(businesses));
     loadAdmin();
     alert("Business Approved");
 }
 
-/* REMOVE - WITH CONFIRMATION + REASON + DELETE ITEMS */
 function removeBusiness(index){
     let business = businesses[index];
-
-        let confirmRemove = confirm(`Are you sure you want to REMOVE ${business.businessName}?\n\nThis will delete ALL their items and they must register fresh.`);
+    let confirmRemove = confirm(`Are you sure you want to REMOVE ${business.businessName}?\n\nThis will delete ALL their items and they must register fresh.`);
     if(!confirmRemove) return;
 
     let reason = prompt(`Enter reason for removing ${business.businessName}:`);
-    if(reason === null || reason.trim() === ""){
-        alert("Removal cancelled. Reason required.");
-        return;
-    }
+    if(reason === null || reason.trim() === ""){ alert("Removal cancelled. Reason required."); return; }
 
     let itemsDeleted = 0;
-    products = products.filter(product => {
-        if(product.owner === business.username){
-            itemsDeleted++;
-            return false;
-        }
-        return true;
-    });
+    products = products.filter(product => { if(product.owner === business.username){ itemsDeleted++; return false;} return true; });
     localStorage.setItem("products", JSON.stringify(products));
-
-    let user = users.find(u => u.username === business.username);
-    if(user){
-        user.businessApproved = false;
-        localStorage.setItem("users", JSON.stringify(users));
-    }
 
     removedBusinesses.push({
         businessName: business.businessName,
@@ -1479,66 +789,13 @@ function removeBusiness(index){
     alert(`Business removed. ${itemsDeleted} items deleted. Reason saved.`);
 }
 
-/* RESET ALL DATA */
-function resetAllData(){
-    if(confirm("WARNING: This will delete ALL users, products, sales, and businesses!\n\nAre you sure you want to RESET EVERYTHING?")){
-        if(confirm("FINAL CONFIRMATION: All data will be permanently deleted. Continue?")){
-            localStorage.clear();
-            users = [];
-            businesses = [];
-            products = [];
-            sales = [];
-            removedBusinesses = [];
-            allBaskets = {};
-            basket = [];
-            currentUser = null;
-            alert("All data cleared. System reset to fresh state.");
-            location.reload();
-        }
-    }
-}
-
-/* MY SITE */
-function openMySite(){
-    showPage("mySitePage");
-}
-
-function loadBusinessStats(){
-    let business = businesses.find(b => b.username === currentUser.username && b.approved);
-    if(!business){
-        document.getElementById("businessStatsBox").innerHTML = "";
-        return;
-    }
-
-    let now = new Date().getTime();
-    let daysPassed = Math.floor((now - business.registrationDate)/(1000*60*60*24));
-    let daysLeft = 30 - daysPassed;
-    if(daysLeft < 0) daysLeft = 0;
-
-    let mySales = sales.filter(s => s.seller === currentUser.username);
-    let totalSales = mySales.reduce((sum, s) => sum + Number(s.amount), 0);
-
-    document.getElementById("businessStatsBox").innerHTML = `
-    <div class="businessStats">
-        <p>Total Sales: Ksh ${totalSales}</p>
-        <p>Fee Renewal: ${daysLeft} Days Left</p>
-    </div>
-    `;
-}
-
-/* ACTIVE ITEMS */
-function openActiveItems(){
-    showPage("activeItemsPage");
-}
+function openMySite(){ showPage("mySitePage"); }
+function openActiveItems(){ showPage("activeItemsPage"); }
 
 function loadActiveItems(){
     myActiveItems.innerHTML="";
     let myProducts = products.filter(p => p.owner === currentUser.username && p.stock > 0);
-
-    if(myProducts.length === 0){
-        myActiveItems.innerHTML = "<h3>No active items</h3>";
-        return;
-    }
+    if(myProducts.length === 0){ myActiveItems.innerHTML = "<h3>No active items</h3>"; return; }
 
     myProducts.forEach((product)=>{
         let originalIndex = products.indexOf(product);
@@ -1567,42 +824,28 @@ function loadActiveItems(){
             <p>Stock: ${product.stock}</p>
             <p>Ksh ${product.price}</p>
             <p>${product.paymentMethod}</p>
-        </div>
-        `;
+        </div>`;
     });
 }
 
-/* POST PAGE */
-function openPostPage(){
-    showPage("postPage");
-}
+function openPostPage(){ showPage("postPage"); }
 
-/* POST */
 function postItem(){
     let files = mediaFile.files;
-    if(files.length > 5){
-        alert("Maximum 5 photos allowed");
-        return;
-    }
+    if(files.length > 5){ alert("Maximum 5 photos allowed"); return; }
 
     let price = Number(itemPrice.value);
-    if(price < 10 || price > 1000000){
-        alert("Price must be between Ksh 10 and Ksh 1,000,000");
-        return;
-    }
+    if(price < 10 || price > 1000000){ alert("Price must be between Ksh 10 and Ksh 1,000,000"); return; }
 
     if(files.length > 0){
         let mediaArray = [];
         let loadedCount = 0;
-
         for(let i = 0; i < files.length; i++){
             let reader = new FileReader();
             reader.onload = function(){
                 mediaArray.push({data: reader.result, type: files[i].type});
                 loadedCount++;
-                if(loadedCount === files.length){
-                    saveProductMultiple(mediaArray);
-                }
+                if(loadedCount === files.length){ saveProductMultiple(mediaArray); }
             };
             reader.readAsDataURL(files[i]);
         }
@@ -1636,19 +879,12 @@ function saveProductMultiple(mediaArray){
     openMySite();
 }
 
-/* DELIVERIES */
-function openDeliveries(){
-    showPage("deliveriesPage");
-}
+function openDeliveries(){ showPage("deliveriesPage"); }
 
 function loadDeliveries(){
     myDeliveries.innerHTML="";
     let mySales = sales.filter(s => s.seller === currentUser.username && s.status === "Pending Delivery");
-
-    if(mySales.length === 0){
-        myDeliveries.innerHTML = "<h3>No pending deliveries</h3>";
-        return;
-    }
+    if(mySales.length === 0){ myDeliveries.innerHTML = "<h3>No pending deliveries</h3>"; return; }
 
     mySales.forEach((sale, index)=>{
         myDeliveries.innerHTML += `
@@ -1661,8 +897,7 @@ function loadDeliveries(){
             <p><a href="https://wa.me/${sale.buyer}" target="_blank">WhatsApp Buyer</a></p>
             <p><a href="https://maps.google.com/?q=${encodeURIComponent(sale.buyerLocation)}" target="_blank">Open Map</a></p>
             <button onclick="markDelivered(${sales.indexOf(sale)})">MARK DELIVERED</button>
-        </div>
-        `;
+        </div>`;
     });
 }
 
@@ -1675,26 +910,16 @@ function markDelivered(saleIndex){
     }
 }
 
-/* NAVIGATION */
-function openSignup(){
-    showPage("signupPage");
-}
-
-function backToLogin(){
-    showPage("loginPage");
-}
-
-function openMarket(){
-    showPage("marketPage");
-}
+function openSignup(){ showPage("signupPage"); }
+function backToLogin(){ showPage("loginPage"); }
+function openMarket(){ showPage("marketPage"); }
 
 function logout(){
     currentUser=null;
-    basket=[];
     showPage("loginPage");
 }
 
-/* PASSWORD RESET */
+/* Forgot password remains local (we can move to Firestore next) */
 function forgotPassword(){
     showPage("forgotBox");
     document.getElementById('forgotStep1').style.display = 'block';
@@ -1702,36 +927,15 @@ function forgotPassword(){
 }
 
 function sendResetCode(){
-    let username = document.getElementById('forgotUser').value.trim();
-    let phone = document.getElementById('forgotPhone').value.trim();
-    if(username==="" || phone===""){alert("Fill username and phone number");return;}
-    let account = users.find(x => x.username === username && x.phone === phone);
-    if(!account){alert("No account found with those details");return;}
-    resetCodeSent = Math.floor(100000 + Math.random() * 900000).toString();
-    resetAccount = account;
-
-    let smsLink = `sms:${phone}?body=Your NAROK CONNECT reset code: ${resetCodeSent}`;
-    window.open(smsLink, '_blank');
-    alert("SMS app opened. Send the message to receive your code.");
-
-    document.getElementById('forgotStep1').style.display = 'none';
-    document.getElementById('forgotStep2').style.display = 'block';
+    alert("Password reset via SMS is still local for now. Tell me if you want it in Firebase too.");
 }
 
 function resetPassword(){
-    let code = document.getElementById('resetCode').value.trim();
-    let newPass = document.getElementById('newPassReset').value.trim();
-    let confirmPass = document.getElementById('confirmPassReset').value.trim();
-    if(code!== resetCodeSent){alert("Wrong code");return;}
-    if(newPass.length!== 4 ||!/^\d{4}$/.test(newPass)){alert("Password must be 4 digits");return;}
-    if(newPass!== confirmPass){alert("Passwords do not match");return;}
-    resetAccount.password = newPass;
-    localStorage.setItem("users", JSON.stringify(users));
-    resetCodeSent = null;
-    resetAccount = null;
-    alert("Password reset successful. You can now login");
-    showPage("loginPage");
+    alert("Password reset via SMS is still local for now. Tell me if you want it in Firebase too.");
 }
+
+// Transport typo vars used in your original UI
+function openMySite(){ showPage("mySitePage"); }
 </script>
 
 </body>
