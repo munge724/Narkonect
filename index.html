@@ -216,9 +216,11 @@ a{color:white;text-decoration:none;font-weight:bold;font-size:11px;}
 <div id="businessPage" class="page">
     <h2>BUSINESS REGISTRATION</h2>
     <h3>Monthly Fee: Ksh 500</h3>
+
     <input type="text" id="businessName" placeholder="Business Name">
     <input type="text" id="clientNo" placeholder="Client Number">
     <input type="text" id="businessId" placeholder="ID Number">
+
     <div class="circleArea">
         <div class="circle" onclick="registerBusiness()">REGISTER</div>
         <div class="circle" onclick="openMarket()">BACK</div>
@@ -228,9 +230,12 @@ a{color:white;text-decoration:none;font-weight:bold;font-size:11px;}
 <div id="mpesaPage" class="page">
     <h2>MPESA PAYMENT</h2>
     <h3>Pay Ksh 500 to: 0741437977</h3>
-    <input type="text" id="transactionCode" placeholder="Transaction Code">
+
+    <input type="text" id="transactionCode" placeholder="Transaction Code (after paying)">
+
     <div class="circleArea">
         <div class="circle" onclick="verifyPayment()">VERIFY</div>
+        <div class="circle" onclick="openBusiness()">BACK</div>
     </div>
 </div>
 
@@ -325,7 +330,6 @@ a{color:white;text-decoration:none;font-weight:bold;font-size:11px;}
     <video id="modalVideo" controls style="display:none;"></video>
 </div>
 
-<!-- Firebase (Firestore for users) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
   import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
@@ -343,7 +347,6 @@ a{color:white;text-decoration:none;font-weight:bold;font-size:11px;}
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Expose helpers to regular script
   window.__fb = {
     db,
     createUser: async (doc) => addDoc(collection(db, "users"), doc),
@@ -378,7 +381,6 @@ a{color:white;text-decoration:none;font-weight:bold;font-size:11px;}
 <script>
 setTimeout(()=>{ document.getElementById("welcomeScreen").style.display="none"; },3000);
 
-let users = []; // not used for auth anymore
 let businesses = JSON.parse(localStorage.getItem("businesses")) || [];
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
@@ -386,10 +388,14 @@ let removedBusinesses = JSON.parse(localStorage.getItem("removedBusinesses")) ||
 
 let currentUser = null;
 let selectedProduct = null;
-let resetCodeSent = null;
-let resetAccount = null;
 let selectedTransport = null;
 let transportCost = 0;
+
+const businessButton = document.getElementById("businessButton");
+const mpesaArea = document.getElementById("mpesaArea");
+const paybillArea = document.getElementById("paybillArea");
+const tillArea = document.getElementById("tillArea");
+const pochiArea = document.getElementById("pochiArea");
 
 function togglePassword(inputId, btn){
     let input = document.getElementById(inputId);
@@ -402,7 +408,6 @@ function clearInputs(){
         if(input.type!== "file" && input.id!== "searchBar") input.value="";
     });
     document.querySelectorAll("select").forEach(select=>{ select.selectedIndex=0; });
-    document.querySelectorAll(".togglePass").forEach(btn=>{ btn.innerText = "👁"; });
     selectedTransport = null;
     transportCost = 0;
 }
@@ -412,6 +417,7 @@ function showPage(id){
     document.querySelectorAll(".page").forEach(page=>{ page.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
     clearInputs();
+
     if(id === "adminPage") loadAdmin();
     if(id === "marketPage") { document.getElementById("searchBar").value = ""; loadMarket(); }
     if(id === "activeItemsPage") loadActiveItems();
@@ -424,7 +430,7 @@ function showPage(id){
 }
 
 function paymentView(){
-    let method = paymentMethod.value;
+    let method = document.getElementById("paymentMethod").value;
     mpesaArea.style.display="none";
     paybillArea.style.display="none";
     tillArea.style.display="none";
@@ -437,11 +443,11 @@ function paymentView(){
 
 /* SIGNUP -> Firestore */
 async function signup(){
-    let username = signupUsername.value.trim();
-    let id = signupId.value.trim();
-    let phone = signupPhone.value.trim();
-    let email = signupEmail.value.trim();
-    let password = signupPassword.value.trim();
+    let username = document.getElementById("signupUsername").value.trim();
+    let id = document.getElementById("signupId").value.trim();
+    let phone = document.getElementById("signupPhone").value.trim();
+    let email = document.getElementById("signupEmail").value.trim();
+    let password = document.getElementById("signupPassword").value.trim();
 
     if(username===""||id===""||phone===""||password===""){alert("Fill all fields");return;}
     if(password.length!== 4){alert("Password must be 4 digits");return;}
@@ -468,45 +474,55 @@ async function signup(){
 
 /* LOGIN -> Firestore */
 async function login(){
-    let username = loginUsername.value.trim();
-    let password = loginPassword.value.trim();
+    let username = document.getElementById("loginUsername").value.trim();
+    let password = document.getElementById("loginPassword").value.trim();
 
     if(username==="admin" && password==="1234"){
         showPage("adminPage");
         return;
     }
 
-    if(!window.__fb){
-        alert("Firebase not ready. Try again.");
-        return;
-    }
+    if(!window.__fb){ alert("Firebase not ready. Try again."); return; }
 
     const user = await window.__fb.findUserByUsernameAndPassword(username, password);
     if(!user){alert("Wrong Details");return;}
 
     currentUser = user;
-    updateBusinessButton();
+
+    // IMPORTANT: button should depend on localStorage business approval too
+    refreshBusinessAccess();
     showPage("marketPage");
 }
 
-function updateBusinessButton(){
-    // businessApproved is kept in Firestore user doc
-    // but your businesses are still localStorage for now
-    // so we keep your original UI:
-    if(currentUser.businessApproved){
+function refreshBusinessAccess(){
+    businesses = JSON.parse(localStorage.getItem("businesses")) || [];
+    if(!currentUser){ return; }
+
+    // determine approval from localStorage businesses
+    const myBusiness = businesses.find(b => b.username === currentUser.username && !b.removed);
+    const isApproved = !!(myBusiness && myBusiness.approved);
+
+    if(isApproved){
         businessButton.innerText="MY SITE";
         businessButton.onclick=openMySite;
+        businessButton.style.display = "inline-flex";
     }else{
         businessButton.innerText="REG BS";
         businessButton.onclick=openBusiness;
+        businessButton.style.display = "inline-flex";
     }
 }
+
+// Ensure button state also correct if user comes back without login event
+window.addEventListener("focus", () => refreshBusinessAccess());
 
 function searchItems(){ loadMarket(); }
 
 function loadMarket(){
-    marketItems.innerHTML="";
+    document.getElementById("marketItems").innerHTML="";
     let searchTerm = document.getElementById("searchBar").value.toLowerCase().trim();
+
+    businesses = JSON.parse(localStorage.getItem("businesses")) || [];
 
     products.forEach((product,index)=>{
         if(product.stock <= 0) return;
@@ -524,14 +540,14 @@ function loadMarket(){
             });
             mediaHTML += '</div>';
         }else if(product.media){
-            if(product.mediaType.includes("image")){
+            if(product.mediaType && product.mediaType.includes("image")){
                 mediaHTML=`<img src="${product.media}" onclick="viewProductMediaByIndex(${index})">`;
             }else{
                 mediaHTML=`<video controls src="${product.media}" onclick="viewProductMediaByIndex(${index})"></video>`;
             }
         }
 
-        marketItems.innerHTML += `
+        document.getElementById("marketItems").innerHTML += `
         <div class="marketItem">
             ${mediaHTML}
             <h3>${product.item}</h3>
@@ -540,8 +556,7 @@ function loadMarket(){
             <p>${product.paymentMethod}</p>
             <p><a href="https://wa.me/${product.sellerPhone}" target="_blank">WhatsApp</a></p>
             <button onclick="openBuyMenu(${index})">BUY</button>
-        </div>
-        `;
+        </div>`;
     });
 }
 
@@ -561,23 +576,20 @@ function openImageModal(src, type){
     }
     modal.style.display = "flex";
 }
-
 function viewProductMedia(productIndex, mediaIndex){
     let product = products[productIndex];
     let mediaObj = product.mediaArray[mediaIndex];
     openImageModal(mediaObj.data, mediaObj.type.includes("image")? "image":"video");
 }
-
 function viewProductMediaByIndex(productIndex){
     let product = products[productIndex];
     if(product.mediaArray && product.mediaArray.length > 0){
         let mediaObj = product.mediaArray[0];
         openImageModal(mediaObj.data, mediaObj.type.includes("image")? "image":"video");
     }else if(product.media){
-        openImageModal(product.media, product.mediaType.includes("image")? "image":"video");
+        openImageModal(product.media, product.mediaType && product.mediaType.includes("image")? "image":"video");
     }
 }
-
 function closeImageModal(){
     document.getElementById("imageModal").style.display = "none";
     document.getElementById("modalVideo").pause();
@@ -587,7 +599,6 @@ function toggleTransport(){
     let options = document.getElementById("transportOptions");
     options.style.display = options.style.display === "none"? "block" : "none";
 }
-
 function selectTransport(type, cost){
     selectedTransport = type;
     transportCost = cost;
@@ -596,14 +607,12 @@ function selectTransport(type, cost){
     document.getElementById("transportOptions").style.display = "none";
     updateTotal();
 }
-
 function updateTotal(){
     let product = products[selectedProduct];
     let total = product.price + transportCost;
     document.getElementById("totalBox").style.display = "block";
     document.getElementById("totalBox").innerText = `Total: Ksh ${total}`;
 }
-
 function openBuyMenu(index){
     selectedProduct=index;
     let product = products[index];
@@ -614,11 +623,10 @@ function openBuyMenu(index){
     transportCost = 0;
     showPage("buyPage");
 }
-
 function confirmBuy(){
     if(!selectedTransport){ alert("Please select transport option"); return; }
 
-    let phoneNumber = buyerPhoneNumber.value.trim();
+    let phoneNumber = document.getElementById("buyerPhoneNumber").value.trim();
     let product = products[selectedProduct];
     let total = product.price + transportCost;
 
@@ -636,7 +644,6 @@ function confirmBuy(){
     alert("Order Placed Successfully!\nSeller will contact you for delivery.");
     openMarket();
 }
-
 function buyItem(index, buyerPhone, buyerLocation, totalPaid){
     let product=products[index];
     if(product.stock>0){
@@ -660,142 +667,98 @@ function buyItem(index, buyerPhone, buyerLocation, totalPaid){
     }
 }
 
+/* =========================
+   FIXED: BUSINESS REG PART
+   ========================= */
+
 function openBusiness(){ showPage("businessPage"); }
 
 function registerBusiness(){
-    let businessNameVal = businessName.value.trim();
-    let clientNoVal = clientNo.value.trim();
-    let businessIdVal = businessId.value.trim();
+    let businessNameVal = document.getElementById("businessName").value.trim();
+    let clientNoVal = document.getElementById("clientNo").value.trim();
+    let businessIdVal = document.getElementById("businessId").value.trim();
 
-    if(businessNameVal===""||clientNoVal===""||businessIdVal===""){ alert("Fill all fields"); return; }
+    if(!currentUser){
+        alert("Please login first");
+        showPage("loginPage");
+        return;
+    }
+    if(businessNameVal===""||clientNoVal===""||businessIdVal===""){
+        alert("Fill all fields");
+        return;
+    }
 
-    let fee = prompt("Enter Ksh 500 monthly fee to register business");
-    if(fee === null || fee === ""){ alert("Registration cancelled"); return; }
+    businesses = JSON.parse(localStorage.getItem("businesses")) || [];
 
-    let feeAmount = Number(fee);
-    if(feeAmount!== 500){ alert("Invalid amount. Fee must be exactly Ksh 500"); return; }
+    const already = businesses.some(b => b.username === currentUser.username && !b.removed);
+    if(already){
+        alert("You already have a business registration pending/approved.");
+        showPage("mySitePage");
+        return;
+    }
 
-    let clientNumber = prompt("Enter your Mpesa number for payment");
-    if(clientNumber === null || clientNumber === ""){ alert("Registration cancelled"); return; }
-    if(!/^(07|01)\d{8}$/.test(clientNumber)){ alert("Enter valid Mpesa number e.g 0712345678"); return; }
+    businesses.push({
+        username: currentUser.username,
+        businessName: businessNameVal,
+        clientNo: clientNoVal,
+        id: businessIdVal,
+        amountPaid: 500,
+        approved: false,
+        registrationDate: new Date().getTime(),
+        transactionCode: "",
+        removed: false
+    });
 
-    let pin = prompt("Enter MPESA PIN to pay Ksh 500");
-    if(pin === null || pin === ""){ alert("Registration cancelled"); return; }
-    if(pin.length < 4){ alert("Invalid PIN"); return; }
-
-    let business={
-        username:currentUser.username,
-        businessName:businessNameVal,
-        clientNo:clientNoVal,
-        id:businessIdVal,
-        amountPaid:500,
-        approved:false,
-        registrationDate:new Date().getTime(),
-        transactionCode:"PAID"
-    };
-    businesses.push(business);
     localStorage.setItem("businesses", JSON.stringify(businesses));
-    alert("Payment successful. Sent To Admin For Approval");
-    openMarket();
+    alert("Business details saved. Now pay Ksh 500 and verify the transaction code.");
+    showPage("mpesaPage");
 }
 
 function verifyPayment(){
-    let code=transactionCode.value.trim();
+    let code = document.getElementById("transactionCode").value.trim();
     if(code===""){alert("Enter transaction code");return;}
-    alert("This step is now automated. Use business registration instead.");
-}
 
-function loadAdmin(){
-    adminTop.innerHTML="";
-    adminBottom.innerHTML="";
-    let totalSales=0;
-    let totalFees=0;
-    let pending=0;
-    sales.forEach(s=>{totalSales += s.total;});
-    businesses.forEach(b=>{ totalFees += b.amountPaid; if(!b.approved){pending++;} });
+    businesses = JSON.parse(localStorage.getItem("businesses")) || [];
 
-    adminTop.innerHTML += `
-    <div class="adminCard"><h3>PENDING</h3><p>${pending}</p></div>
-    <div class="adminCard"><h3>SALES</h3><p>Ksh ${totalSales}</p></div>
-    <div class="adminCard"><h3>REGISTERED</h3><p>${businesses.length}</p></div>
-    `;
-    adminBottom.innerHTML += `
-    <div class="adminCard"><h3>FEES</h3><p>Ksh ${totalFees}</p></div>
-    `;
+    // attach transaction code to the latest pending business for this user
+    let idx = businesses.map((b,i)=>({b,i}))
+        .filter(x=>x.b.username === currentUser.username && !x.b.approved && !x.b.removed)
+        .map(x=>x.i)
+        .pop();
 
-    businesses.forEach((business,index)=>{
-        let now=new Date().getTime();
-        let daysPassed=Math.floor((now-business.registrationDate)/(1000*60*60*24));
-        let daysLeft=30-daysPassed;
-        if(daysLeft<0){daysLeft=0;}
-        adminBottom.innerHTML += `
-        <div class="businessCard">
-            <h3>${business.businessName}</h3>
-            <p>Owner: ${business.username}</p>
-            <p>${daysLeft} Days Left</p>
-            <p>${business.approved? "APPROVED":"PENDING"}</p>
-            <button onclick="approveBusiness(${index})">APPROVE</button>
-            <button onclick="removeBusiness(${index})">REMOVE</button>
-        </div>
-        `;
-    });
-
-    if(removedBusinesses.length > 0){
-        adminBottom.innerHTML += `<h3 style="width:100%;margin-top:20px;">REMOVED BUSINESSES</h3>`;
-        removedBusinesses.forEach((removed)=>{
-            adminBottom.innerHTML += `
-            <div class="removedCard">
-                <h3>${removed.businessName}</h3>
-                <p>Owner: ${removed.username}</p>
-                <p>Removed: ${new Date(removed.removedDate).toLocaleDateString()}</p>
-                <p>Reason: ${removed.reason}</p>
-            </div>`;
-        });
+    if(idx === undefined){
+        alert("No pending business registration found to verify.");
+        showPage("businessPage");
+        return;
     }
-}
 
-function approveBusiness(index){
-    businesses[index].approved=true;
-    localStorage.setItem("businesses", JSON.stringify(businesses));
-    loadAdmin();
-    alert("Business Approved");
-}
-
-function removeBusiness(index){
-    let business = businesses[index];
-    let confirmRemove = confirm(`Are you sure you want to REMOVE ${business.businessName}?\n\nThis will delete ALL their items and they must register fresh.`);
-    if(!confirmRemove) return;
-
-    let reason = prompt(`Enter reason for removing ${business.businessName}:`);
-    if(reason === null || reason.trim() === ""){ alert("Removal cancelled. Reason required."); return; }
-
-    let itemsDeleted = 0;
-    products = products.filter(product => { if(product.owner === business.username){ itemsDeleted++; return false;} return true; });
-    localStorage.setItem("products", JSON.stringify(products));
-
-    removedBusinesses.push({
-        businessName: business.businessName,
-        username: business.username,
-        id: business.id,
-        removedDate: new Date().getTime(),
-        reason: reason.trim()
-    });
-    localStorage.setItem("removedBusinesses", JSON.stringify(removedBusinesses));
-
-    businesses.splice(index,1);
+    businesses[idx].transactionCode = code;
     localStorage.setItem("businesses", JSON.stringify(businesses));
 
-    loadAdmin();
-    alert(`Business removed. ${itemsDeleted} items deleted. Reason saved.`);
+    alert("Payment code submitted! Waiting for admin approval.");
+    showPage("marketPage");
+
+    // still not approved, so button should remain REG BS
+    refreshBusinessAccess();
 }
 
+/* =========================
+   Rest of your existing app
+   ========================= */
+
+function openMarket(){ showPage("marketPage"); }
 function openMySite(){ showPage("mySitePage"); }
 function openActiveItems(){ showPage("activeItemsPage"); }
+function openDeliveries(){ showPage("deliveriesPage"); }
+function openPostPage(){ showPage("postPage"); }
 
 function loadActiveItems(){
-    myActiveItems.innerHTML="";
+    document.getElementById("myActiveItems").innerHTML="";
     let myProducts = products.filter(p => p.owner === currentUser.username && p.stock > 0);
-    if(myProducts.length === 0){ myActiveItems.innerHTML = "<h3>No active items</h3>"; return; }
+    if(myProducts.length === 0){
+        document.getElementById("myActiveItems").innerHTML = "<h3>No active items</h3>";
+        return;
+    }
 
     myProducts.forEach((product)=>{
         let originalIndex = products.indexOf(product);
@@ -811,13 +774,14 @@ function loadActiveItems(){
             });
             mediaHTML += '</div>';
         }else if(product.media){
-            if(product.mediaType.includes("image")){
+            if(product.mediaType && product.mediaType.includes("image")){
                 mediaHTML=`<img src="${product.media}" onclick="viewProductMediaByIndex(${originalIndex})">`;
             }else{
                 mediaHTML=`<video controls src="${product.media}" onclick="viewProductMediaByIndex(${originalIndex})"></video>`;
             }
         }
-        myActiveItems.innerHTML += `
+
+        document.getElementById("myActiveItems").innerHTML += `
         <div class="marketItem">
             ${mediaHTML}
             <h3>${product.item}</h3>
@@ -828,13 +792,11 @@ function loadActiveItems(){
     });
 }
 
-function openPostPage(){ showPage("postPage"); }
-
 function postItem(){
-    let files = mediaFile.files;
+    let files = document.getElementById("mediaFile").files;
     if(files.length > 5){ alert("Maximum 5 photos allowed"); return; }
 
-    let price = Number(itemPrice.value);
+    let price = Number(document.getElementById("itemPrice").value);
     if(price < 10 || price > 1000000){ alert("Price must be between Ksh 10 and Ksh 1,000,000"); return; }
 
     if(files.length > 0){
@@ -858,17 +820,17 @@ function saveProductMultiple(mediaArray){
     let product={
         owner:currentUser.username,
         sellerPhone:currentUser.phone,
-        item:itemName.value,
-        size:itemSize.value,
-        colour:itemColour.value,
-        stock:Number(itemStock.value),
-        price:Number(itemPrice.value),
-        paymentMethod:paymentMethod.value,
-        mpesaNo:mpesaNo.value,
-        paybillNo:paybillNo.value,
-        accNo:accNo.value,
-        tillNo:tillNo.value,
-        pochiNo:pochiNo.value,
+        item:document.getElementById("itemName").value,
+        size:document.getElementById("itemSize").value,
+        colour:document.getElementById("itemColour").value,
+        stock:Number(document.getElementById("itemStock").value),
+        price:Number(document.getElementById("itemPrice").value),
+        paymentMethod:document.getElementById("paymentMethod").value,
+        mpesaNo:document.getElementById("mpesaNo").value,
+        paybillNo:document.getElementById("paybillNo").value,
+        accNo:document.getElementById("accNo").value,
+        tillNo:document.getElementById("tillNo").value,
+        pochiNo:document.getElementById("pochiNo").value,
         mediaArray: mediaArray,
         media: mediaArray.length > 0? mediaArray[0].data : "",
         mediaType: mediaArray.length > 0? mediaArray[0].type : ""
@@ -879,15 +841,16 @@ function saveProductMultiple(mediaArray){
     openMySite();
 }
 
-function openDeliveries(){ showPage("deliveriesPage"); }
-
 function loadDeliveries(){
-    myDeliveries.innerHTML="";
+    document.getElementById("myDeliveries").innerHTML="";
     let mySales = sales.filter(s => s.seller === currentUser.username && s.status === "Pending Delivery");
-    if(mySales.length === 0){ myDeliveries.innerHTML = "<h3>No pending deliveries</h3>"; return; }
+    if(mySales.length === 0){
+        document.getElementById("myDeliveries").innerHTML = "<h3>No pending deliveries</h3>";
+        return;
+    }
 
-    mySales.forEach((sale, index)=>{
-        myDeliveries.innerHTML += `
+    mySales.forEach((sale)=> {
+        document.getElementById("myDeliveries").innerHTML += `
         <div class="deliveryItem">
             <h3>${sale.item}</h3>
             <p>Buyer: ${sale.buyer}</p>
@@ -896,46 +859,113 @@ function loadDeliveries(){
             <p>Location: ${sale.buyerLocation}</p>
             <p><a href="https://wa.me/${sale.buyer}" target="_blank">WhatsApp Buyer</a></p>
             <p><a href="https://maps.google.com/?q=${encodeURIComponent(sale.buyerLocation)}" target="_blank">Open Map</a></p>
-            <button onclick="markDelivered(${sales.indexOf(sale)})">MARK DELIVERED</button>
         </div>`;
     });
 }
 
-function markDelivered(saleIndex){
-    if(confirm("Confirm this order is delivered?")){
-        sales[saleIndex].status = "Delivered";
-        localStorage.setItem("sales", JSON.stringify(sales));
-        loadDeliveries();
-        alert("Marked as delivered");
-    }
-}
+function logout(){ currentUser=null; showPage("loginPage"); }
 
+/* Navigation helpers */
 function openSignup(){ showPage("signupPage"); }
 function backToLogin(){ showPage("loginPage"); }
-function openMarket(){ showPage("marketPage"); }
-
-function logout(){
-    currentUser=null;
-    showPage("loginPage");
-}
-
-/* Forgot password remains local (we can move to Firestore next) */
 function forgotPassword(){
     showPage("forgotBox");
     document.getElementById('forgotStep1').style.display = 'block';
     document.getElementById('forgotStep2').style.display = 'none';
 }
+function sendResetCode(){ alert("Password reset via SMS is still local for now."); }
+function resetPassword(){ alert("Password reset via SMS is still local for now."); }
 
-function sendResetCode(){
-    alert("Password reset via SMS is still local for now. Tell me if you want it in Firebase too.");
+function loadAdmin(){
+    document.getElementById("adminTop").innerHTML="";
+    document.getElementById("adminBottom").innerHTML="";
+    let totalSales=0;
+    let totalFees=0;
+    let pending=0;
+
+    sales.forEach(s=>{totalSales += s.total;});
+    businesses.forEach(b=>{ totalFees += b.amountPaid; if(!b.approved){pending++;} });
+
+    document.getElementById("adminTop").innerHTML += `
+    <div class="adminCard"><h3>PENDING</h3><p>${pending}</p></div>
+    <div class="adminCard"><h3>SALES</h3><p>Ksh ${totalSales}</p></div>
+    <div class="adminCard"><h3>REGISTERED</h3><p>${businesses.length}</p></div>`;
+
+    document.getElementById("adminBottom").innerHTML += `
+    <div class="adminCard"><h3>FEES</h3><p>Ksh ${totalFees}</p></div>`;
+
+    businesses.forEach((business,index)=>{
+        let now=new Date().getTime();
+        let daysPassed=Math.floor((now-business.registrationDate)/(1000*60*60*24));
+        let daysLeft=30-daysPassed;
+        if(daysLeft<0){daysLeft=0;}
+        document.getElementById("adminBottom").innerHTML += `
+        <div class="businessCard">
+            <h3>${business.businessName}</h3>
+            <p>Owner: ${business.username}</p>
+            <p>${daysLeft} Days Left</p>
+            <p>${business.approved? "APPROVED":"PENDING"}</p>
+            <button onclick="approveBusiness(${index})">APPROVE</button>
+            <button onclick="removeBusiness(${index})">REMOVE</button>
+        </div>`;
+    });
+
+    if(removedBusinesses.length > 0){
+        document.getElementById("adminBottom").innerHTML += `<h3 style="width:100%;margin-top:20px;">REMOVED BUSINESSES</h3>`;
+        removedBusinesses.forEach((removed)=>{
+            document.getElementById("adminBottom").innerHTML += `
+            <div class="removedCard">
+                <h3>${removed.businessName}</h3>
+                <p>Owner: ${removed.username}</p>
+                <p>Removed: ${new Date(removed.removedDate).toLocaleDateString()}</p>
+                <p>Reason: ${removed.reason}</p>
+            </div>`;
+        });
+    }
 }
 
-function resetPassword(){
-    alert("Password reset via SMS is still local for now. Tell me if you want it in Firebase too.");
+function approveBusiness(index){
+    businesses = JSON.parse(localStorage.getItem("businesses")) || [];
+    businesses[index].approved = true;
+    localStorage.setItem("businesses", JSON.stringify(businesses));
+    loadAdmin();
+    alert("Business Approved");
+
+    // if admin happens to be logged in as a normal user session on same tab, refresh
+    refreshBusinessAccess();
 }
 
-// Transport typo vars used in your original UI
-function openMySite(){ showPage("mySitePage"); }
+function removeBusiness(index){
+    businesses = JSON.parse(localStorage.getItem("businesses")) || [];
+    let business = businesses[index];
+
+    let confirmRemove = confirm(`Are you sure you want to REMOVE ${business.businessName}?\n\nThis will delete ALL their items.`);
+    if(!confirmRemove) return;
+
+    let reason = prompt(`Enter reason for removing ${business.businessName}:`);
+    if(reason === null || reason.trim() === ""){ alert("Removal cancelled. Reason required."); return; }
+
+    let itemsDeleted = 0;
+    products = products.filter(product => { if(product.owner === business.username){ itemsDeleted++; return false;} return true; });
+    localStorage.setItem("products", JSON.stringify(products));
+
+    removedBusinesses.push({
+        businessName: business.businessName,
+        username: business.username,
+        id: business.id,
+        removedDate: new Date().getTime(),
+        reason: reason.trim()
+    });
+    localStorage.setItem("removedBusinesses", JSON.stringify(removedBusinesses));
+
+    businesses.splice(index,1);
+    localStorage.setItem("businesses", JSON.stringify(businesses));
+
+    loadAdmin();
+    alert(`Business removed. ${itemsDeleted} items deleted. Reason saved.`);
+
+    refreshBusinessAccess();
+}
 </script>
 
 </body>
